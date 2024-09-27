@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="akstyle.css">
+    <title>Aurinkokello</title>
+    <style>
+        div {
+            background-color: #fcf6bd;
+            width: 58%;
+            border: 10px solid #ff758f;
+            padding: 1px;
+            margin: 1px;
+            border-radius: 7px;
+        }
+        table {
+            width: 40%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 5px solid #ef476f;
+            margin: 20px 0;
+            border-radius: 7px;
+        }
+        td {
+       
+        }
+        th, td {
+            border: 1px solid pink;
+            padding: 8px;
+            text-align: center;
+        }
+        tr:hover {background-color: #d0f4de;}
+
+        th {
+            background-color: lightcoral;
+            color: darkred;
+        }
+    </style>
+</head>
+<body onload="showDate(); populateTable();">
+
+<h2>Aurinko</h2>
+
+<p id="demo"></p>
+
+    <div>
+
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Päivä</th>
+            <th>Auringonlasku</th>
+            <th>Auringonnousu</th>
+            <th>Pituus</th>
+            <th>Muutos</th>
+            <th>Hämärä päättyy</th>
+            <th>Hämärä alkaa</th>
+            <th>Muutos</th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr>
+           <td>Tänään</td>
+           <td id="sunset-cell">Ladataan...</td>
+       </tr>
+    </tbody>
+</table>
+        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.8.0/suncalc.min.js"></script>
+
+
+<script>
+    // Näyttää nykyisen päivämäärän
+    function showDate() {
+        document.getElementById('demo').innerHTML = new Date();
+    }
+
+    function getSunsetTime(lat, lon) {
+        var today = new Date();
+        var times = SunCalc.getTimes(today, lat, lon);
+
+        var sunsetTime = times.sunset;
+        var hours = sunsetTime.getHours();
+        var minutes = sunsetTime.getMinutes();
+
+        //lisää johtava nolla minuutteihin jos se on yksinumeroinen
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        //palauta auringonlaskun kellonaika muodossa HH:MM
+        return hours + ":" + minutes;
+    }
+
+        
+
+    // Täyttää taulukon tiedoilla
+    function populateTable() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+        var sunset = getSunsetTime(latitude, longitude);
+        
+        document.getElementById('sunset-cell').textContent = sunset;
+            }, function(error) {
+            console.log("Paikannus ei ole käytössä.");
+            document.getElementById('sunset-cell').textContent = "Salli paikannus.";
+            });
+        
+
+       
+    }
+</script>
+
+</body>
+</html>
