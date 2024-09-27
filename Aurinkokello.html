@@ -50,7 +50,7 @@
             <th>Päivä</th>
             <th>Auringonlasku</th>
             <th>Auringonnousu</th>
-            <th>Pituus</th>
+            <th>Päivän pituus</th>
             <th>Muutos</th>
             <th>Hämärä päättyy</th>
             <th>Hämärä alkaa</th>
@@ -61,6 +61,7 @@
        <tr>
            <td>Tänään</td>
            <td id="sunset-cell">Ladataan...</td>
+           <td id="sunrise-cell">Ladataan...</td>
        </tr>
     </tbody>
 </table>
@@ -73,6 +74,7 @@
     function showDate() {
         document.getElementById('demo').innerHTML = new Date();
     }
+    //hakee auringonlaskun ajan
 
     function getSunsetTime(lat, lon) {
         var today = new Date();
@@ -88,6 +90,19 @@
         return hours + ":" + minutes;
     }
 
+    //hakee auringonnousun
+    function getSunriseTime(lat, lon) {
+        var today = new Date();
+        var times = SunCalc.getTimes(today, lat, lon);
+
+        var sunriseTime = times.sunrise;
+        var hours = sunriseTime.getHours();
+        var minutes = sunriseTime.getMinutes();
+
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return hours + ":" + minutes;
+    }
+
         
 
     // Täyttää taulukon tiedoilla
@@ -97,8 +112,11 @@
         var longitude = position.coords.longitude;
 
         var sunset = getSunsetTime(latitude, longitude);
+        var sunrise = getSunriseTime(latitude, longitude);
         
         document.getElementById('sunset-cell').textContent = sunset;
+        document.getElementById('sunrise-cell').textContent = sunrise;
+            
             }, function(error) {
             console.log("Paikannus ei ole käytössä.");
             document.getElementById('sunset-cell').textContent = "Salli paikannus.";
