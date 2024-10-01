@@ -62,6 +62,7 @@
            <td>Tänään</td>
            <td id="sunset-cell">Ladataan...</td>
            <td id="sunrise-cell">Ladataan...</td>
+           <td id="daylength-cell">Ladataan...</td>
        </tr>
     </tbody>
 </table>
@@ -80,14 +81,7 @@
         var today = new Date();
         var times = SunCalc.getTimes(today, lat, lon);
 
-        var sunsetTime = times.sunset;
-        var hours = sunsetTime.getHours();
-        var minutes = sunsetTime.getMinutes();
-
-        //lisää johtava nolla minuutteihin jos se on yksinumeroinen
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        //palauta auringonlaskun kellonaika muodossa HH:MM
-        return hours + ":" + minutes;
+        return times.sunset;
     }
 
     //hakee auringonnousun
@@ -95,12 +89,17 @@
         var today = new Date();
         var times = SunCalc.getTimes(today, lat, lon);
 
-        var sunriseTime = times.sunrise;
-        var hours = sunriseTime.getHours();
-        var minutes = sunriseTime.getMinutes();
+        return times.sunrise;
+    }
 
-        minutes = minutes < 10 ? '0' + minutes : minutes;
+    //päivän pituus
+    function getDayLength(sunrise, sunset) {
+        var diff = sunset - sunrise;
+        var hours = Math.floor(diff / (1000 * 60 * 60));
+        var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
         return hours + ":" + minutes;
+
     }
 
         
@@ -113,13 +112,20 @@
 
         var sunset = getSunsetTime(latitude, longitude);
         var sunrise = getSunriseTime(latitude, longitude);
+
+        var sunriseFormatted = sunrise.getHours() + ":" + (sunrise.getMinutes() < 10 ? '0' + sunrise.getMinutes() : sunrise.getMinutes());
+        var sunsetFormatted = sunset.getHours() + ":" + (sunset.getMinutes() < 10 ? '0' + sunset.getMinutes() : sunset.getMinutes());
+        var daylength = getDayLength(sunrise, sunset);
         
-        document.getElementById('sunset-cell').textContent = sunset;
-        document.getElementById('sunrise-cell').textContent = sunrise;
+        document.getElementById('sunset-cell').textContent = sunsetFormatted;
+        document.getElementById('sunrise-cell').textContent = sunriseFormatted;
+        document.getElementById('daylength-cell').textContent = daylength;
             
             }, function(error) {
             console.log("Paikannus ei ole käytössä.");
             document.getElementById('sunset-cell').textContent = "Salli paikannus.";
+            document.getElementById('sunrise-cell').textContent = "Salli paikannus.";
+            document.getElementById('daylength-cell').textContent = "Salli paikannus.";
             });
         
 
