@@ -48,8 +48,8 @@
     <thead>
         <tr>
             <th>Päivä</th>
-            <th>Auringonlasku</th>
             <th>Auringonnousu</th>
+            <th>Auringonlasku</th>
             <th>Päivän pituus</th>
             <th>Muutos</th>
             <th>Hämärä päättyy</th>
@@ -60,10 +60,84 @@
     <tbody>
        <tr>
            <td>Tänään</td>
-           <td id="sunset-cell">Ladataan...</td>
            <td id="sunrise-cell">Ladataan...</td>
+           <td id="sunset-cell">Ladataan...</td>
            <td id="daylength-cell">Ladataan...</td>
+           <td id="daychange-cell"></td>
+           <td id="dawn-cell">Ladataan...</td>
+           <td id="dusk-cell">Ladataan...</td>
+           <td id="darkchange-cell"></td>
        </tr>
+        <tr>
+            <td>Huomenna</td>
+            <td id="sunrise-tmrw">Ladataan...</td>
+            <td id="sunset-tmrw">Ladataan...</td>
+            <td id="length-tmrw">Ladataan...</td>
+            <td id="daychange-tmrw">Ladataan...</td>
+            <td id="dawn-tmrw">Ladataan...</td>
+            <td id="dusk-tmrw">Ladataan...</td>
+            <td id="darkchange-tmrw">Ladataan...</td>
+        </tr>
+        <tr>
+            <td>+1 viikko</td>
+            <td id="sunrise-week">Ladataan...</td>
+            <td id="sunset-week">Ladataan...</td>
+            <td id="length-week">Ladataan...</td>
+            <td id="daychange-week">Ladataan...</td>
+            <td id="dawn-week">Ladataan...</td>
+            <td id="dusk-week">Ladataan...</td>
+            <td id="darkchange-week">Ladataan...</td>
+        </tr>
+        <tr>
+            <td>+2 viikkoa</td>
+            <td id="sunrise-twow">Ladataan...</td>
+            <td id="sunset-twow">Ladataan...</td>
+            <td id="length-twow">Ladataan...</td>
+            <td id="daychange-twow">Ladataan...</td>
+            <td id="dawn-twow">Ladataan...</td>
+            <td id="dusk-twow">Ladataan...</td>
+            <td id="darkchange-twow">Ladataan...</td>
+        </tr>
+        <tr>
+            <td>+1 Kuukausi</td>
+            <td id="sunrise-month">Ladataan...</td>
+            <td id="sunset-month">Ladataan...</td>
+            <td id="length-month">Ladataan...</td>
+            <td id="daychange-month">Ladataan...</td>
+            <td id="dawn-month">Ladataan...</td>
+            <td id="dusk-month">Ladataan...</td>
+            <td id="darkchange-month">Ladataan...</td>
+        </tr>
+        <tr>
+            <td>+2 kuukautta</td>
+            <td id="sunrise-twom">Ladataan...</td>
+            <td id="sunset-twom">Ladataan...</td>
+            <td id="length-twom">Ladataan...</td>
+            <td id="daychange-twom">Ladataan...</td>
+            <td id="dawn-twom">Ladataan...</td>
+            <td id="dusk-twom">Ladataan...</td>
+            <td id="darkchange-twom">Ladataan...</td>
+        </tr>
+        <tr>
+            <td>+3 kuukautta</td>
+            <td id="sunrise-threem">Ladataan...</td>
+            <td id="sunset-threem">Ladataan...</td>
+            <td id="length-threem">Ladataan...</td>
+            <td id="daychange-threem">Ladataan...</td>
+            <td id="dawn-threem">Ladataan...</td>
+            <td id="dusk-threem">Ladataan...</td>
+            <td id="darkchange-threem">Ladataan...</td>
+        </tr>
+        <tr>
+            <td>+6 kuukautta</td>
+            <td id="sunrise-sixm">Ladataan...</td>
+            <td id="sunset-sixm">Ladataan...</td>
+            <td id="length-sixm">Ladataan...</td>
+            <td id="daychange-sixm">Ladataan...</td>
+            <td id="dawn-sixm">Ladataan...</td>
+            <td id="dusk-sixm">Ladataan...</td>
+            <td id="darkchange-sixm">Ladataan...</td>
+        </tr>
     </tbody>
 </table>
         </div>
@@ -84,7 +158,7 @@
         return times.sunset;
     }
 
-    //hakee auringonnousun
+    //hakee auringonnousun ajan
     function getSunriseTime(lat, lon) {
         var today = new Date();
         var times = SunCalc.getTimes(today, lat, lon);
@@ -101,7 +175,20 @@
         return hours + ":" + minutes;
 
     }
-
+    //hakee hämärän alun
+    function getDusk(lat, lon) {
+        var today = new Date();
+        var times = SunCalc.getTimes(today, lat, lon);
+        var duskTime = times.dusk;
+        return duskTime;
+    }
+    //hakee hämärän lopun
+    function getDawn(lat, lon) {
+        var today = new Date();
+        var times = SunCalc.getTimes(today, lat, lon);
+        var dawnTime = times.dawn;
+        return dawnTime;
+    }
         
 
     // Täyttää taulukon tiedoilla
@@ -116,16 +203,26 @@
         var sunriseFormatted = sunrise.getHours() + ":" + (sunrise.getMinutes() < 10 ? '0' + sunrise.getMinutes() : sunrise.getMinutes());
         var sunsetFormatted = sunset.getHours() + ":" + (sunset.getMinutes() < 10 ? '0' + sunset.getMinutes() : sunset.getMinutes());
         var daylength = getDayLength(sunrise, sunset);
-        
-        document.getElementById('sunset-cell').textContent = sunsetFormatted;
-        document.getElementById('sunrise-cell').textContent = sunriseFormatted;
-        document.getElementById('daylength-cell').textContent = daylength;
             
+        var duskTime = getDusk(latitude, longitude);
+        var duskFormatted = duskTime.getHours() + ":" + (duskTime.getMinutes() < 10 ? '0' + duskTime.getMinutes() : duskTime.getMinutes());
+            
+        var dawnTime = getDawn(latitude, longitude);
+        var dawnFormatted = dawnTime.getHours() + ":" + (dawnTime.getMinutes() < 10 ? '0' + dawnTime.getMinutes() : dawnTime.getMinutes());
+        
+        document.getElementById('sunrise-cell').textContent = sunriseFormatted;
+        document.getElementById('sunset-cell').textContent = sunsetFormatted;
+        document.getElementById('daylength-cell').textContent = daylength;
+        document.getElementById('dusk-cell').textContent = duskFormatted;
+        document.getElementById('dawn-cell').textContent = dawnFormatted;
+            //errorteksti jos ei ole lupaa paikannukselle
             }, function(error) {
             console.log("Paikannus ei ole käytössä.");
             document.getElementById('sunset-cell').textContent = "Salli paikannus.";
             document.getElementById('sunrise-cell').textContent = "Salli paikannus.";
             document.getElementById('daylength-cell').textContent = "Salli paikannus.";
+            document.getElementById('dusk-cell').textContent = "Salli paikannus.";
+            document.getElementById('dawn-cell').textContent = "Salli paikannus.";
             });
         
 
